@@ -27,3 +27,13 @@ export const getMemoizedNumItems = createSelector(
   (state: RootState) => state.cart.items,
   (items) => Object.values(items).reduce((a, b) => a + b, 0)
 );
+
+export const getTotalPrice = createSelector(
+  (state: RootState) => state.cart.items,
+  (state: RootState) => state.products.products,
+  (items, products) =>
+    Object.entries(items).reduce(
+      (total, [id, quantity]) => total + products[id].price * quantity,
+      0
+    )
+);
