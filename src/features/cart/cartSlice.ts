@@ -22,10 +22,17 @@ const cartSlice = createSlice({
       const id = action.payload;
       delete state.items[id];
     },
+    updateQuantity(
+      state,
+      action: PayloadAction<{ id: string; quantity: number }>
+    ) {
+      const { id, quantity } = action.payload;
+      state.items[id] = quantity;
+    },
   },
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions;
 export default cartSlice.reducer;
 
 export const getMemoizedNumItems = createSelector(
@@ -37,8 +44,11 @@ export const getTotalPrice = createSelector(
   (state: RootState) => state.cart.items,
   (state: RootState) => state.products.products,
   (items, products) =>
-    Object.entries(items).reduce(
-      (total, [id, quantity]) => total + products[id].price * quantity,
-      0
-    )
+    Object.entries(items)
+      .reduce(
+        (total, [id, quantity]: [string, number]): number =>
+          total + products[id].price * quantity,
+        0
+      )
+      .toFixed(2)
 );

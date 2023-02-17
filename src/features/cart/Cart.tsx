@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Cart.module.css";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { getTotalPrice, removeFromCart } from "./cartSlice";
+import { getTotalPrice, removeFromCart, updateQuantity } from "./cartSlice";
 
 export function Cart() {
   const products = useAppSelector((state) => state.products.products);
@@ -12,6 +12,16 @@ export function Cart() {
 
   const handleRemoveFromCart = (id: string) => {
     dispatch(removeFromCart(id));
+  };
+
+  const handleUpdateQuantity = (id: string, quantity: number) => {
+    dispatch(updateQuantity({ id, quantity }));
+  };
+
+  const handleQuantityChanged = (id: string, e: React.ChangeEvent) => {
+    const target = e.target as HTMLInputElement;
+    const quantity = parseInt(target.value);
+    handleUpdateQuantity(id, quantity);
   };
 
   return (
@@ -35,6 +45,7 @@ export function Cart() {
                   type="text"
                   className={styles.input}
                   defaultValue={quantity}
+                  onChange={(e) => handleQuantityChanged(id, e)}
                 />
               </td>
               <td>${products[id].price}</td>
