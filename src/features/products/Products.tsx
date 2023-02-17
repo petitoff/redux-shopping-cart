@@ -2,12 +2,17 @@ import React, { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Product, getProducts } from "../../app/api";
 import { productsReceived } from "./productsSlice";
+import { addToCart } from "../cart/cartSlice";
 import styles from "./Products.module.css";
 
 export function Products() {
   const products = useAppSelector((state) => state.products.products);
 
   const dispatch = useAppDispatch();
+
+  const handleAddToCart = (id: string) => {
+    dispatch(addToCart(id));
+  };
 
   useEffect(() => {
     getProducts().then((products) => dispatch(productsReceived(products)));
@@ -29,7 +34,9 @@ export function Products() {
                 <h1>{product.name}</h1>
                 <p>{product.description}</p>
                 <p>${product.price}</p>
-                <button>Add to Cart 🛒</button>
+                <button onClick={() => handleAddToCart(product.id)}>
+                  Add to Cart 🛒
+                </button>
               </div>
             </article>
           </li>
