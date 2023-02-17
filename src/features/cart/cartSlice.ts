@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice, createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
+import { ProductsState } from "../products/productsSlice";
 
 export interface CartState {
   items: { [productId: string]: number };
@@ -17,10 +18,14 @@ const cartSlice = createSlice({
       const id = action.payload;
       state.items[id] = (state.items[id] || 0) + 1;
     },
+    removeFromCart(state, action: PayloadAction<string>) {
+      const id = action.payload;
+      delete state.items[id];
+    },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, removeFromCart } = cartSlice.actions;
 export default cartSlice.reducer;
 
 export const getMemoizedNumItems = createSelector(
